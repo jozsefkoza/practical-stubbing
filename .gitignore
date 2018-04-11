@@ -1,0 +1,12 @@
+# IDE
+.idea
+*.iml
+
+.classpath
+.project
+
+# Maven
+target
+
+# VertX
+.vertx
