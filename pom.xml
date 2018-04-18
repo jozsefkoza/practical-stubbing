@@ -19,6 +19,10 @@
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.compiler.testSource>${java.version}</maven.compiler.testSource>
     <maven.compiler.testTarget>${java.version}</maven.compiler.testTarget>
+    <!-- dep versions -->
+    <guava.version>24.1-jre</guava.version>
+    <spring.version>5.0.5.RELEASE</spring.version>
+    <vertx.version>3.5.1</vertx.version>
   </properties>
 
   <dependencyManagement>
@@ -26,17 +30,22 @@
       <dependency>
         <groupId>io.vertx</groupId>
         <artifactId>vertx-web</artifactId>
-        <version>3.5.1</version>
+        <version>${vertx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-web-client</artifactId>
+        <version>${vertx.version}</version>
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-context</artifactId>
-        <version>5.0.5.RELEASE</version>
+        <version>${spring.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>24.1-jre</version>
+        <version>${guava.version}</version>
       </dependency>
       <!-- Log -->
       <dependency>

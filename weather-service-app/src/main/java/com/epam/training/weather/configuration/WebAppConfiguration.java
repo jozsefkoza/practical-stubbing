@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.epam.training.weather.service.VertxHttpWeatherService;
-import com.epam.training.weather.service.WeatherService;
+import com.epam.training.weather.server.VertxHttpWeatherServiceServer;
+import com.epam.training.weather.server.WeatherServiceServer;
 
 /**
  * Configuration of the web application.
@@ -19,7 +19,7 @@ public class WebAppConfiguration {
     private int applicationPort;
 
     @Bean(destroyMethod = "stop")
-    public WeatherService weatherService() {
-        return new VertxHttpWeatherService(applicationPort);
+    public WeatherServiceServer weatherService() {
+        return new VertxHttpWeatherServiceServer(applicationPort);
     }
 }
