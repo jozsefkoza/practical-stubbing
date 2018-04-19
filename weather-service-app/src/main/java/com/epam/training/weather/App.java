@@ -3,7 +3,7 @@ package com.epam.training.weather;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import com.epam.training.weather.server.WeatherServiceServer;
+import com.epam.training.weather.configuration.WebAppConfiguration;
 
 /**
  * Main entry point of WebApp.
@@ -24,7 +24,7 @@ public class App {
 
     private void run() {
         ApplicationContext applicationContext = new AnnotationConfigApplicationContext(configurationBasePackage);
-        WeatherServiceServer server = applicationContext.getBean(WeatherServiceServer.class);
-        server.start();
+        WebAppConfiguration webApp = applicationContext.getBean(WebAppConfiguration.class);
+        webApp.bootstrap();
     }
 }

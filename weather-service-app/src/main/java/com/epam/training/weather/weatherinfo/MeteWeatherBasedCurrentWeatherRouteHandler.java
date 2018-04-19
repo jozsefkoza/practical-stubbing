@@ -18,7 +18,7 @@ import io.vertx.ext.web.RoutingContext;
  */
 public class MeteWeatherBasedCurrentWeatherRouteHandler implements ValidatingRouteHandler {
     private static final String WOEID = "woeid";
-    private static final String ROUTE = "/weather/:" + WOEID + "/";
+    private static final String ROUTE = "/weather/:" + WOEID;
 
     private final MetaWeatherServiceClientRequestFactory metaWeatherServiceClientRequestFactory;
 
