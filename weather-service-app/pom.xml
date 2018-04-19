@@ -11,6 +11,38 @@
 
   <artifactId>weather-service-app</artifactId>
 
+  <properties>
+    <app.port>8080</app.port>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <executions>
+          <execution>
+            <id>start-service</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>pre-integration-test</phase>
+            <configuration>
+              <executable>java</executable>
+              <arguments>
+                <argument>-classpath</argument>
+                <classpath />
+                <argument>-DAPPLICATION_PORT=${app.port}</argument>
+                <argument>com.epam.training.weather.App</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencies>
     <dependency>
       <groupId>io.vertx</groupId>
