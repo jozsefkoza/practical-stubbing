@@ -1,6 +1,6 @@
 package com.epam.training.weather.weatherinfo;
 
-import static com.epam.training.weather.handler.HttpServerResponseAwareAsyncClientResponseHandler.asyncClientResponseHandlerWith;
+import static com.epam.training.weather.handler.AsyncClientResponseHandler.asyncEnd;
 import static java.util.Objects.requireNonNull;
 
 import java.util.Optional;
@@ -18,7 +18,7 @@ import io.vertx.ext.web.RoutingContext;
  */
 public class MeteWeatherBasedCurrentWeatherRouteHandler implements ValidatingRouteHandler {
     private static final String WOEID = "woeid";
-    private static final String ROUTE = "/weather/:" + WOEID;
+    private static final String ROUTE = "/weather/:" + WOEID + "/today";
 
     private final MetaWeatherServiceClientRequestFactory metaWeatherServiceClientRequestFactory;
 
@@ -34,7 +34,7 @@ public class MeteWeatherBasedCurrentWeatherRouteHandler implements ValidatingRou
     @Override
     public void handleValid(RoutingContext event) {
         getWoeId(event.request()).ifPresent(woeId ->
-                metaWeatherServiceClientRequestFactory.weatherFor(woeId).send(asyncClientResponseHandlerWith(event.response()))
+                metaWeatherServiceClientRequestFactory.weatherFor(woeId).send(asyncEnd(event.response()))
         );
     }
 

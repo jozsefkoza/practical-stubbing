@@ -1,6 +1,6 @@
 package com.epam.training.weather.location;
 
-import static com.epam.training.weather.handler.HttpServerResponseAwareAsyncClientResponseHandler.asyncClientResponseHandlerWith;
+import static com.epam.training.weather.handler.AsyncClientResponseHandler.asyncEnd;
 import static java.util.Objects.requireNonNull;
 
 import com.epam.training.weather.handler.ValidatingRouteHandler;
@@ -26,7 +26,7 @@ public class MetaWeatherBasedLocationSearchRouteHandler implements ValidatingRou
     @Override
     public void handleValid(RoutingContext event) {
         String location = getSearchTerm(event.request());
-        metaWeatherServiceClientRequestFactory.searchForLocation(location).send(asyncClientResponseHandlerWith(event.response()));
+        metaWeatherServiceClientRequestFactory.searchForLocation(location).send(asyncEnd(event.response()));
     }
 
     @Override

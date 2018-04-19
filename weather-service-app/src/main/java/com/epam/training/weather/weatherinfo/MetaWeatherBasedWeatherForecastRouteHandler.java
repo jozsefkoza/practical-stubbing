@@ -1,6 +1,6 @@
 package com.epam.training.weather.weatherinfo;
 
-import static com.epam.training.weather.handler.HttpServerResponseAwareAsyncClientResponseHandler.asyncClientResponseHandlerWith;
+import static com.epam.training.weather.handler.AsyncClientResponseHandler.asyncEnd;
 import static java.util.Objects.requireNonNull;
 
 import java.util.Optional;
@@ -36,7 +36,7 @@ public class MetaWeatherBasedWeatherForecastRouteHandler implements ValidatingRo
     @Override
     public void handleValid(RoutingContext event) {
         getWoeId(event.request()).ifPresent(woeId ->
-                metaWeatherServiceClientRequestFactory.weatherForcastFor(woeId, DAYS_AHEAD).send(asyncClientResponseHandlerWith(event.response()))
+                metaWeatherServiceClientRequestFactory.weatherForcastFor(woeId, DAYS_AHEAD).send(asyncEnd(event.response()))
         );
     }
 

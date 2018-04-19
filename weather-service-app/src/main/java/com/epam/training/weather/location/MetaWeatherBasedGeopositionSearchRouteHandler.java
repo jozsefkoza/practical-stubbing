@@ -1,6 +1,6 @@
 package com.epam.training.weather.location;
 
-import static com.epam.training.weather.handler.HttpServerResponseAwareAsyncClientResponseHandler.asyncClientResponseHandlerWith;
+import static com.epam.training.weather.handler.AsyncClientResponseHandler.asyncEnd;
 import static java.util.Objects.requireNonNull;
 
 import java.util.Optional;
@@ -36,7 +36,7 @@ public class MetaWeatherBasedGeopositionSearchRouteHandler implements Validating
     @Override
     public void handleValid(RoutingContext event) {
         getGeoposition(event.request()).ifPresent(geoposition ->
-                metaWeatherServiceClientRequestFactory.searchForLocation(geoposition).send(asyncClientResponseHandlerWith(event.response()))
+                metaWeatherServiceClientRequestFactory.searchForLocation(geoposition).send(asyncEnd(event.response()))
         );
     }
 
