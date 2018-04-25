@@ -2,12 +2,12 @@ package com.epam.training.weather.configuration;
 
 import java.util.function.Supplier;
 
+import io.vertx.core.Vertx;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.epam.training.weather.server.VertxHttpWeatherService;
-import io.vertx.core.Vertx;
+import com.epam.training.weather.server.WeatherInfoVerticle;
 
 /**
  * Configuration of the web application.
@@ -21,8 +21,8 @@ public class WebAppConfiguration {
     private int applicationPort;
 
     @Bean
-    public VertxHttpWeatherService weatherService() {
-        return new VertxHttpWeatherService(applicationPort);
+    public WeatherInfoVerticle weatherService() {
+        return new WeatherInfoVerticle(applicationPort);
     }
 
     @Bean

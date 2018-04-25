@@ -5,16 +5,16 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
-import org.springframework.util.MimeTypeUtils;
-
-import com.epam.training.weather.model.Geoposition;
-import com.epam.training.weather.model.WoeId;
 import com.google.common.net.HttpHeaders;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.ext.web.client.HttpRequest;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.client.WebClientOptions;
+import org.springframework.util.MimeTypeUtils;
+
+import com.epam.training.weather.model.Geoposition;
+import com.epam.training.weather.model.WoeId;
 
 /**
  * Creates {@link HttpRequest} requests to consume {@code 'www.metaweather.com'} api.
@@ -28,10 +28,10 @@ public final class MetaWeatherServiceClientRequestFactory {
 
     public MetaWeatherServiceClientRequestFactory(Vertx vertx) {
         client = WebClient.create(vertx, new WebClientOptions()
-                .setDefaultHost("www.metaweather.com")
-                .setDefaultPort(443)
-                .setSsl(true)
-                .setTrustAll(true));
+            .setDefaultHost("www.metaweather.com")
+            .setDefaultPort(443)
+            .setSsl(true)
+            .setTrustAll(true));
     }
 
     public HttpRequest<Buffer> searchForLocation(String location) {
@@ -40,8 +40,8 @@ public final class MetaWeatherServiceClientRequestFactory {
 
     public HttpRequest<Buffer> searchForLocation(Geoposition geoposition) {
         String lattlong = Optional.ofNullable(geoposition)
-                .map(pos -> String.format("%s,%s", geoposition.latitude(), geoposition.longitude()))
-                .orElseThrow(() -> new IllegalArgumentException("Geoposition must be defined"));
+            .map(pos -> String.format("%s,%s", geoposition.latitude(), geoposition.longitude()))
+            .orElseThrow(() -> new IllegalArgumentException("Geoposition must be defined"));
         return get(Endpoint.LOCATION_SEARCH).addQueryParam("lattlong", lattlong);
     }
 
@@ -58,8 +58,8 @@ public final class MetaWeatherServiceClientRequestFactory {
 
     private HttpRequest<Buffer> get(Endpoint endpoint, Object... pathParams) {
         return client.get(endpoint.resolvedPath(pathParams))
-                .putHeader(HttpHeaders.ACCEPT, MimeTypeUtils.APPLICATION_JSON_VALUE)
-                .putHeader(HttpHeaders.ACCEPT_CHARSET, StandardCharsets.UTF_8.toString());
+            .putHeader(HttpHeaders.ACCEPT, MimeTypeUtils.APPLICATION_JSON_VALUE)
+            .putHeader(HttpHeaders.ACCEPT_CHARSET, StandardCharsets.UTF_8.toString());
     }
 
     public enum Endpoint {

@@ -20,6 +20,7 @@
     <maven.compiler.testSource>${java.version}</maven.compiler.testSource>
     <maven.compiler.testTarget>${java.version}</maven.compiler.testTarget>
     <!-- dep versions -->
+    <gson.version>2.8.2</gson.version>
     <guava.version>24.1-jre</guava.version>
     <spring.version>5.0.5.RELEASE</spring.version>
     <vertx.version>3.5.1</vertx.version>
@@ -46,6 +47,11 @@
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
         <version>${guava.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>${gson.version}</version>
       </dependency>
       <!-- Log -->
       <dependency>
