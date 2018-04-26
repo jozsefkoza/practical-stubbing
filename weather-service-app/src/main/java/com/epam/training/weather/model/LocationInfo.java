@@ -5,17 +5,17 @@ import java.util.Objects;
 import com.google.common.base.MoreObjects;
 
 /**
- * @author JoeZee
+ * @author Jozsef_Koza
  */
 public final class LocationInfo {
     private String title;
-    private long woeid;
+    private WoeId woeid;
 
     public String getTitle() {
         return title;
     }
 
-    public long getWoeid() {
+    public WoeId getWoeid() {
         return woeid;
     }
 
@@ -33,14 +33,14 @@ public final class LocationInfo {
             return false;
         }
         LocationInfo that = (LocationInfo) o;
-        return woeid == that.woeid && Objects.equals(title, that.title);
+        return Objects.equals(title, that.title) && Objects.equals(woeid, that.woeid);
     }
 
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-            .add("title", title)
-            .add("woeid", woeid)
-            .toString();
+                .add("title", title)
+                .add("woeid", woeid)
+                .toString();
     }
 }

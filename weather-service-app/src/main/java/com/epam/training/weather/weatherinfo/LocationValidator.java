@@ -7,9 +7,9 @@ import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
 
 /**
- * @author JoeZee
+ * @author Jozsef_Koza
  */
-public class LocationValidator implements Handler<RoutingContext> {
+public final class LocationValidator implements Handler<RoutingContext> {
     private static final String LOCATION = "location";
 
     private final Predicate<String> validator;

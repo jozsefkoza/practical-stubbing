@@ -1,8 +1,11 @@
 package com.epam.training.weather.server;
 
-import java.util.LinkedList;
-import java.util.List;
-
+import com.epam.training.weather.healthcheck.PingRouteHandler;
+import com.epam.training.weather.metaweather.MetaWeatherServiceClientRequestFactory;
+import com.epam.training.weather.weatherinfo.CurrentWeatherRouteHandler;
+import com.epam.training.weather.weatherinfo.ForecastWeatherRouteHandler;
+import com.epam.training.weather.weatherinfo.LocationSearchRouteHandler;
+import com.epam.training.weather.weatherinfo.LocationValidator;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.http.HttpServer;
@@ -12,12 +15,6 @@ import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.ErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.epam.training.weather.handler.RouteHandler;
-import com.epam.training.weather.healthcheck.PingRouteHandler;
-import com.epam.training.weather.metaweather.MetaWeatherServiceClientRequestFactory;
-import com.epam.training.weather.weatherinfo.LocationSearchRouteHandler;
-import com.epam.training.weather.weatherinfo.LocationValidator;
 
 /**
  * Simple HTTP server with VertX.
@@ -38,20 +35,12 @@ public final class WeatherInfoVerticle extends AbstractVerticle {
     public void start(Future<Void> startFuture) {
         MetaWeatherServiceClientRequestFactory metaWeatherServiceClientRequestFactory = new MetaWeatherServiceClientRequestFactory(vertx);
 
-        List<RouteHandler> routingConfiguration = new LinkedList<>();
-        routingConfiguration.add(new PingRouteHandler());
-//        routingConfiguration.add(new MetaWeatherBasedLocationSearchRouteHandler(metaWeatherServiceClientRequestFactory));
-//        routingConfiguration.add(new MetaWeatherBasedGeopositionSearchRouteHandler(metaWeatherServiceClientRequestFactory));
-//        routingConfiguration.add(new MeteWeatherBasedCurrentWeatherRouteHandler(metaWeatherServiceClientRequestFactory));
-//        routingConfiguration.add(new MetaWeatherBasedWeatherForecastRouteHandler(metaWeatherServiceClientRequestFactory));
-
         Router router = Router.router(vertx);
-//        routingConfiguration.forEach(route -> router.get(route.getRoutePattern()).handler(route));
-        router.getWithRegex("/weather/(?<location>[^\\/]+)(?:\\/.*)?$").handler(new LocationValidator());
-//        router.get("/weather/:location/forecast").handler(new LocationValidator());
-        router.get("/weather/:location/forecast").handler(new LocationSearchRouteHandler(metaWeatherServiceClientRequestFactory))
-            .failureHandler(ErrorHandler.create());
-//        router.get("/weather/:location/forecast").handler();
+        router.get("/hello").handler(new PingRouteHandler());
+        router.getWithRegex("^\\/weather\\/(?<location>[^\\/]+)(?:\\/.*)?$").handler(new LocationValidator());
+        router.getWithRegex("^\\/weather\\/(?<location>[^\\/]+)(?:\\/.*)?$").handler(new LocationSearchRouteHandler(metaWeatherServiceClientRequestFactory));
+        router.get("/weather/:location/current").handler(new CurrentWeatherRouteHandler(metaWeatherServiceClientRequestFactory));
+        router.get("/weather/:location/forecast").handler(new ForecastWeatherRouteHandler(metaWeatherServiceClientRequestFactory));
         router.route().handler(BodyHandler.create()).failureHandler(ErrorHandler.create());
 
         httpServer = vertx.createHttpServer(serverConfig).requestHandler(router::accept);

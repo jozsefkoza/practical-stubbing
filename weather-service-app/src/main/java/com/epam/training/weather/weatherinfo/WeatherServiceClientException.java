@@ -1,10 +1,10 @@
 package com.epam.training.weather.weatherinfo;
 
 /**
- * @author JoeZee
+ * @author Jozsef_Koza
  */
-public class WeatherServiceClientException extends RuntimeException {
-    public WeatherServiceClientException(String message, Throwable cause) {
+class WeatherServiceClientException extends RuntimeException {
+    WeatherServiceClientException(String message, Throwable cause) {
         super(message, cause);
     }
 }
