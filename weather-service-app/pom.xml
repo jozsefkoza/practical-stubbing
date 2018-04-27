@@ -13,35 +13,45 @@
 
   <properties>
     <app.port>8080</app.port>
+    <weather.provider.host>www.metaweather.com</weather.provider.host>
   </properties>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.6.0</version>
-        <executions>
-          <execution>
-            <id>start-service</id>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <phase>pre-integration-test</phase>
+  <profiles>
+    <profile>
+      <id>start-app</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.6.0</version>
+            <executions>
+              <execution>
+                <id>start-service</id>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <phase>pre-integration-test</phase>
+                <configuration>
+                  <executable>java</executable>
+                  <arguments>
+                    <argument>-classpath</argument>
+                    <classpath />
+                    <argument>-DAPPLICATION_PORT=${app.port}</argument>
+                    <argument>-DMETA_WEATHER_HOST=${weather.provider.host}</argument>
+                    <argument>com.epam.training.weather.App</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
             <configuration>
-              <executable>java</executable>
-              <arguments>
-                <argument>-classpath</argument>
-                <classpath />
-                <argument>-DAPPLICATION_PORT=${app.port}</argument>
-                <argument>com.epam.training.weather.App</argument>
-              </arguments>
+              <skip>${skip.app.startup}</skip>
             </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
   <dependencies>
     <dependency>

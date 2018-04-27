@@ -9,7 +9,28 @@
   <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
 
+  <profiles>
+    <profile>
+      <id>start-app</id>
+      <properties>
+        <keep.stubs.running>false</keep.stubs.running>
+        <skip.app.startup>false</skip.app.startup>
+        <skip.wiremock.startup>true</skip.wiremock.startup>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>start-stubs</id>
+      <properties>
+        <keep.stubs.running>true</keep.stubs.running>
+        <skip.app.startup>true</skip.app.startup>
+        <skip.wiremock.startup>false</skip.wiremock.startup>
+      </properties>
+    </profile>
+  </profiles>
+
   <modules>
+    <module>stub</module>
     <module>weather-service-app</module>
   </modules>
 
@@ -24,6 +45,10 @@
     <guava.version>24.1-jre</guava.version>
     <spring.version>5.0.5.RELEASE</spring.version>
     <vertx.version>3.5.1</vertx.version>
+    <!-- Build management -->
+    <keep.stubs.running>false</keep.stubs.running>
+    <skip.app.startup>true</skip.app.startup>
+    <skip.wiremock.startup>true</skip.wiremock.startup>
   </properties>
 
   <dependencyManagement>

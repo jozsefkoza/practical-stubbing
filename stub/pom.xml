@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.epam.training</groupId>
+    <artifactId>practical-stubbing</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>stub</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <properties>
+    <wiremock.version>2.17.0</wiremock.version>
+    <wiremock.port>6543</wiremock.port>
+    <wiremock.working.directory>${project.build.directory}/wiremock</wiremock.working.directory>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.8</version>
+        <executions>
+          <execution>
+            <id>get-wiremock</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>get</goal>
+            </goals>
+            <configuration>
+              <groupId>com.github.tomakehurst</groupId>
+              <artifactId>wiremock-standalone</artifactId>
+              <version>${wiremock.version}</version>
+              <destination>${wiremock.working.directory}/wiremock.jar</destination>
+              <skip>${skip.wiremock.startup}</skip>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.bazaarvoice.maven.plugins</groupId>
+        <artifactId>process-exec-maven-plugin</artifactId>
+        <version>0.8</version>
+        <executions>
+          <execution>
+            <id>start-wiremock</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>start</goal>
+            </goals>
+            <configuration>
+              <name>standalone-wiremock</name>
+              <workingDir>${wiremock.working.directory}</workingDir>
+              <healthcheckUrl>http://127.0.0.1:${wiremock.port}/__admin/</healthcheckUrl>
+              <arguments>
+                <argument>java</argument>
+                <argument>-jar</argument>
+                <argument>${wiremock.working.directory}/wiremock.jar</argument>
+                <argument>--port=${wiremock.port}</argument>
+                <argument>--root-dir=${project.basedir}/src/main/resources/wiremock</argument>
+                <argument>--no-request-journal</argument>
+                <argument>--container-threads=30</argument>
+                <argument>--jetty-acceptor-threads=10</argument>
+              </arguments>
+              <processLogFile>${wiremock.working.directory}/wiremock.log</processLogFile>
+              <skip>${skip.wiremock.startup}</skip>
+              <waitForInterrupt>${keep.stubs.running}</waitForInterrupt>
+            </configuration>
+          </execution>
+          <execution>
+            <id>stop-wiremock</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>stop-all</goal>
+            </goals>
+            <configuration>
+              <skip>${skip.wiremock.startup}</skip>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
