@@ -1,11 +1,17 @@
-# Start the app:
+# Start the app
 
-  `mvn clean verify -Pstart-app`
+`mvn clean verify -Pstart-app` - Start the weather service app on http://localhost:8080 by default
 
-  The app will listen on port 8080 by default.
-  To ensure the app is running, in the browser get: http://localhost8080/hello
 
-# Start the stubs (Wiremock)
+#### Available endpoints
 
-  `mvn clean verify -Pstart-stubs`
+`/hello` - healthcheck
 
+`/weather/<location>/current` - respond with the latest available weather information for today date for the argument location
+
+`/weather/<location>/forecast` - respond with at most 5 weather information in the future for a the argument location
+
+
+# Start stubs (Wiremock)
+
+`mvn clean verify -Pstart-stubs` - Start wiremock on http://localhost:6543 by default
