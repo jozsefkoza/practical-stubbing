@@ -4,7 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.List;
 
-import com.epam.training.weather.metaweather.MetaWeatherServiceClientRequestFactory;
+import com.epam.training.weather.metaweather.MetaWeatherClientRequestFactory;
 import com.epam.training.weather.metaweather.messaging.GsonBodyCodecFactory;
 import com.epam.training.weather.model.LocationInfo;
 import com.google.common.reflect.TypeToken;
@@ -21,9 +21,9 @@ public final class LocationSearchRouteHandler implements Handler<RoutingContext>
     private static final BodyCodec<List<LocationInfo>> LOCATION_INFO = GsonBodyCodecFactory.create(new TypeToken<List<LocationInfo>>() {
     });
 
-    private final MetaWeatherServiceClientRequestFactory clientRequestFactory;
+    private final MetaWeatherClientRequestFactory clientRequestFactory;
 
-    public LocationSearchRouteHandler(MetaWeatherServiceClientRequestFactory clientRequestFactory) {
+    public LocationSearchRouteHandler(MetaWeatherClientRequestFactory clientRequestFactory) {
         this.clientRequestFactory = requireNonNull(clientRequestFactory);
     }
 

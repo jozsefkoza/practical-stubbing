@@ -1,7 +1,10 @@
 package com.epam.training.weather.server;
 
+import static java.util.Objects.requireNonNull;
+
 import com.epam.training.weather.healthcheck.PingRouteHandler;
-import com.epam.training.weather.metaweather.MetaWeatherServiceClientRequestFactory;
+import com.epam.training.weather.metaweather.MetaWeatherClientRequestFactory;
+import com.epam.training.weather.model.JsonPresentationModelConverter;
 import com.epam.training.weather.weatherinfo.CurrentWeatherRouteHandler;
 import com.epam.training.weather.weatherinfo.ForecastWeatherRouteHandler;
 import com.epam.training.weather.weatherinfo.LocationSearchRouteHandler;
@@ -25,22 +28,24 @@ public final class WeatherInfoVerticle extends AbstractVerticle {
     private static final Logger LOG = LoggerFactory.getLogger(WeatherInfoVerticle.class);
 
     private final HttpServerOptions serverConfig;
+    private final JsonPresentationModelConverter presentationModelConverter;
     private HttpServer httpServer;
+    private MetaWeatherClientRequestFactory metaWeatherClientRequestFactoryRequestFactory;
 
-    public WeatherInfoVerticle(int port) {
-        serverConfig = new HttpServerOptions().setPort(port);
+    public WeatherInfoVerticle(int port, MetaWeatherClientRequestFactory metaWeatherClientRequestFactoryRequestFactory, JsonPresentationModelConverter presentationModelConverter) {
+        this.serverConfig = new HttpServerOptions().setPort(port);
+        this.metaWeatherClientRequestFactoryRequestFactory = requireNonNull(metaWeatherClientRequestFactoryRequestFactory);
+        this.presentationModelConverter = requireNonNull(presentationModelConverter);
     }
 
     @Override
     public void start(Future<Void> startFuture) {
-        MetaWeatherServiceClientRequestFactory metaWeatherServiceClientRequestFactory = new MetaWeatherServiceClientRequestFactory(vertx);
-
         Router router = Router.router(vertx);
         router.get("/hello").handler(new PingRouteHandler());
         router.getWithRegex("^\\/weather\\/(?<location>[^\\/]+)(?:\\/.*)?$").handler(new LocationValidator());
-        router.getWithRegex("^\\/weather\\/(?<location>[^\\/]+)(?:\\/.*)?$").handler(new LocationSearchRouteHandler(metaWeatherServiceClientRequestFactory));
-        router.get("/weather/:location/current").handler(new CurrentWeatherRouteHandler(metaWeatherServiceClientRequestFactory));
-        router.get("/weather/:location/forecast").handler(new ForecastWeatherRouteHandler(metaWeatherServiceClientRequestFactory));
+        router.getWithRegex("^\\/weather\\/(?<location>[^\\/]+)(?:\\/.*)?$").handler(new LocationSearchRouteHandler(metaWeatherClientRequestFactoryRequestFactory));
+        router.get("/weather/:location/current").handler(new CurrentWeatherRouteHandler(metaWeatherClientRequestFactoryRequestFactory, presentationModelConverter));
+        router.get("/weather/:location/forecast").handler(new ForecastWeatherRouteHandler(metaWeatherClientRequestFactoryRequestFactory, presentationModelConverter));
         router.route().handler(BodyHandler.create()).failureHandler(ErrorHandler.create());
 
         httpServer = vertx.createHttpServer(serverConfig).requestHandler(router::accept);

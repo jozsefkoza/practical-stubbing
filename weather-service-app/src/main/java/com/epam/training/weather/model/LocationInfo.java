@@ -11,7 +11,7 @@ public final class LocationInfo {
     private String title;
     private WoeId woeid;
 
-    public String getTitle() {
+    public String getName() {
         return title;
     }
 

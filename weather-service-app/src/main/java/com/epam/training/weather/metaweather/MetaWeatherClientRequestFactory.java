@@ -1,5 +1,7 @@
 package com.epam.training.weather.metaweather;
 
+import static java.util.Objects.requireNonNull;
+
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -19,17 +21,13 @@ import org.springframework.util.MimeTypeUtils;
  *
  * @author Jozsef_Koza
  */
-public final class MetaWeatherServiceClientRequestFactory {
+public final class MetaWeatherClientRequestFactory {
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
     private final WebClient client;
 
-    public MetaWeatherServiceClientRequestFactory(Vertx vertx) {
-        client = WebClient.create(vertx, new WebClientOptions()
-                .setDefaultHost("www.metaweather.com")
-                .setDefaultPort(443)
-                .setSsl(true)
-                .setTrustAll(true));
+    public MetaWeatherClientRequestFactory(Vertx vertx, WebClientOptions clientConfig) {
+        client = WebClient.create(requireNonNull(vertx), requireNonNull(clientConfig));
     }
 
     public HttpRequest<Buffer> searchForLocation(String location) {
