@@ -15,3 +15,5 @@
 # Start stubs (Wiremock)
 
 `mvn clean verify -Pstart-stubs` - Start wiremock on http://localhost:6543 by default
+
+Check if you can access `http://localhost:6543/__admin/`

@@ -15,16 +15,16 @@ public final class LocationValidator implements Handler<RoutingContext> {
     private final Predicate<String> validator;
 
     public LocationValidator() {
-        validator = location -> location != null && !location.isEmpty();
+        validator = location -> location != null && !location.trim().isEmpty();
     }
 
     @Override
-    public void handle(RoutingContext routingContext) {
-        String location = routingContext.request().getParam(LOCATION);
+    public void handle(RoutingContext route) {
+        String location = route.request().getParam(LOCATION);
         if (validator.test(location)) {
-            routingContext.next();
+            route.next();
         } else {
-            routingContext.response().setStatusCode(HttpResponseStatus.BAD_REQUEST.code()).end("Location must be a defined in the request");
+            route.fail(HttpResponseStatus.BAD_REQUEST.code());
         }
     }
 }

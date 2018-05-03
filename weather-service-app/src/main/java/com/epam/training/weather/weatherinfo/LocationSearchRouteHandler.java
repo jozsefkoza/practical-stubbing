@@ -28,20 +28,20 @@ public final class LocationSearchRouteHandler implements Handler<RoutingContext>
     }
 
     @Override
-    public void handle(RoutingContext routingContext) {
-        String location = routingContext.request().getParam(LOCATION);
+    public void handle(RoutingContext route) {
+        String location = route.request().getParam(LOCATION);
         clientRequestFactory.searchForLocation(location)
                 .as(LOCATION_INFO)
                 .send(clientResponse -> {
                     if (clientResponse.succeeded()) {
                         List<LocationInfo> locations = clientResponse.result().body();
                         if (locations.isEmpty()) {
-                            routingContext.fail(HttpResponseStatus.NO_CONTENT.code());
+                            route.fail(HttpResponseStatus.NOT_FOUND.code());
                         } else {
-                            routingContext.put("location_info", locations.get(0)).next();
+                            route.put("location_info", locations.get(0)).next();
                         }
                     } else {
-                        throw new WeatherServiceClientException("Failed to search for location: " + location, clientResponse.cause());
+                        route.fail(new WeatherServiceClientException("Failed to search for location: " + location, clientResponse.cause()));
                     }
                 });
     }

@@ -27,17 +27,17 @@ public final class ForecastWeatherRouteHandler implements Handler<RoutingContext
     }
 
     @Override
-    public void handle(RoutingContext event) {
-        LocationInfo locationInfo = event.get("location_info");
+    public void handle(RoutingContext route) {
+        LocationInfo locationInfo = route.get("location_info");
         clientRequestFactory.weatherForcastFor(locationInfo.getWoeid())
                 .as(GsonBodyCodecFactory.create(WeatherInfoHolder.class))
                 .send(clientResponse -> {
                     if (clientResponse.succeeded()) {
                         List<WeatherInfo> forecast = clientResponse.result().body().consolidated_weather.stream().limit(5).collect(toList());
                         WeatherForecastPresentationModel model = new WeatherForecastPresentationModel(locationInfo.getName(), forecast);
-                        event.response().end(presentationModelConverter.convert(model));
+                        route.response().end(presentationModelConverter.convert(model));
                     } else {
-                        throw new WeatherServiceClientException("Failed to get weather info for location: " + locationInfo, clientResponse.cause());
+                        route.fail(new WeatherServiceClientException("Failed to get weather info for location: " + locationInfo, clientResponse.cause()));
                     }
                 });
     }
