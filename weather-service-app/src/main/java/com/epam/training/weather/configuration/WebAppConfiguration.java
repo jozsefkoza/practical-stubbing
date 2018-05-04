@@ -1,5 +1,6 @@
 package com.epam.training.weather.configuration;
 
+import java.net.URI;
 import java.util.function.Supplier;
 
 import com.epam.training.weather.metaweather.MetaWeatherClientRequestFactory;
@@ -21,8 +22,8 @@ public class WebAppConfiguration {
 
     @Value("${APPLICATION_PORT:8080}")
     private int applicationPort;
-    @Value("${META_WEATHER_HOST:www.metaweather.com}")
-    private String metaWeatherHost;
+    @Value("${META_WEATHER_BASE_URL:https://www.metaweather.com:443}")
+    private URI metaWeatherBaseUrl;
 
     @Bean
     public WeatherInfoVerticle weatherService() {
@@ -46,10 +47,14 @@ public class WebAppConfiguration {
 
     private WebClientOptions metaWeatherClientConfiguration() {
         return new WebClientOptions()
-                .setDefaultHost(metaWeatherHost)
-                .setDefaultPort(443)
-                .setSsl(true)
-                .setTrustAll(true);
+                .setDefaultHost(metaWeatherBaseUrl.getHost())
+                .setDefaultPort(metaWeatherBaseUrl.getPort())
+                .setTrustAll(true)
+                .setSsl(isSecured(metaWeatherBaseUrl));
+    }
+
+    private boolean isSecured(URI uri) {
+        return "https".equalsIgnoreCase(uri.getScheme());
     }
 
     public void bootstrap() {
