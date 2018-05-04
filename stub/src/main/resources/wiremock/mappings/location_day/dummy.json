@@ -1,0 +1,11 @@
+{
+  "priority": 10,
+  "request": {
+    "method": "ANY",
+    "urlPathPattern": "/api/location(/\\d+){4}"
+  },
+  "response": {
+    "status": 200,
+    "body": "[]"
+  }
+}
